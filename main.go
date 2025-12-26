@@ -1,5 +1,11 @@
-// go-callvis: a tool to help visualize the call graph of a Go program.
-//
+// Package main provides the CLI entrypoint for go-callvis, a tool that builds
+// and visualizes the call graph of Go programs. It parses user flags to
+// configure analysis (e.g., focused packages, grouping rules, exclusion lists,
+// test inclusion, and call graph algorithm), kicks off the static analysis, and
+// then either serves an interactive HTTP UI or renders Graphviz output to disk.
+// The bulk of the analysis lives in other files; this file wires those pieces
+// together and handles user-facing concerns like flag validation and browser
+// launching.
 package main
 
 import (
@@ -90,6 +96,8 @@ func openBrowser(url string) {
 	}
 }
 
+// outputDot orchestrates the offline rendering flow: run analysis, emit the
+// intermediate DOT file, and convert it to the requested image format.
 func outputDot(fname string, outputFormat string) {
 	// get cmdline default for analysis
 	Analysis.OptsSetup()
@@ -119,6 +127,8 @@ func outputDot(fname string, outputFormat string) {
 }
 
 //noinspection GoUnhandledErrorResult
+// main parses CLI arguments, validates the target package, performs the call
+// graph analysis, and starts the HTTP server (or writes files) based on flags.
 func main() {
 	flag.Parse()
 
