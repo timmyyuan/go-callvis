@@ -156,6 +156,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	Analysis = nil
+
 	http.HandleFunc("/", handler)
 
 	if *outputFile == "" {
